@@ -9,7 +9,7 @@ Importing the dataset
 
 ```{r setup, include=TRUE}
 library(tidyverse)
-voting_data <- read.csv("~/Downloads/dataverse_files/1976-2020-house.csv")
+voting_data <- read.csv("~/Downloads/1976-2020-house.csv")
 ```
 
 extracting the necessary the data
