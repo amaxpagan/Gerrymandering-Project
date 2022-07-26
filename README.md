@@ -27,8 +27,11 @@ The graphs created here should instead stand as a jumping-off point for further 
 Look at how disproportionate some states are, and ask why.
 
 Why do some states have third parties, which should earn seats but don't?
+
 Why does one state have a Republican party with three seats too many?
+
 Why does another state have a Democrat party with three seats too many?
+
 Why does one state seem consistently disproportionate over the years?
 
 Questions like these are important to ask, and the data here will help you arrive at them.
