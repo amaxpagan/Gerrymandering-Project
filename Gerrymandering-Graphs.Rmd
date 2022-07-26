@@ -12,10 +12,11 @@ library(tidyverse)
 voting_data <- read.csv("~/Downloads/1976-2020-house.csv")
 ```
 
-extracting the necessary the data
+Extracting the necessary the data. Which year do you want to look at?
 
 ```{r cleanup, include=TRUE}
-voting_data_clean <- voting_data  %>% filter(year == "2020") %>% select(state_po, district, candidate, party, candidatevotes) 
+year.input <- readline(prompt="Enter a year between 1976 and 2020: ")
+voting_data_clean <- voting_data  %>% filter(year == year.input) %>% select(state_po, district, candidate, party, candidatevotes) 
 ```
 
 How many districts are there per state?
@@ -61,36 +62,45 @@ Now I have two useful tables: one that gives us the number of seats each party c
 Creating useful graphs:
 
 ```{r pt1, include=TRUE}
-library(tidyverse)
-idealVotingData <- read.csv("~/Downloads/dataverse_files\\idealnumseats.csv")
-idealVotingData <- select(idealVotingData, -c(1))
-currentVotingData <- read.csv("~/Downloads/currentseats.csv")
-currentVotingData <- select(currentVotingData, -c(1))
-```
-```{r pt1, include=TRUE}
 state.input <- readline(prompt="Enter 2-Letter State Postal Code: ")
 
-this_state_ideal <- idealVotingData %>% filter(state_po == state.input)
-this_state_current <- currentVotingData %>% filter(state_po == state.input)
+this_state_ideal <- finalframe2 %>% arrange(match(party, c("DEMOCRAT", "REPUBLICAN"))) %>% mutate(party = factor(x = party, levels = party))   %>% filter(state_po == state.input)  
+this_state_current <- num_seats_state %>% arrange(match(party, c("DEMOCRAT", "REPUBLICAN"))) %>% mutate(party = factor(x = party, levels = party))   %>% filter(state_po == state.input) 
 
-plot1 <- ggplot(data = this_state_ideal, aes(x = "", y = partyvotes, fill = party)) + 
-    geom_bar(stat = "identity", position = position_fill()) +
-    geom_text(aes(label = party), position = position_fill(vjust = 0.5)) +
-    coord_polar(theta = "y") +
-    facet_wrap(~ state_po, nrow = 1) 
-plot1
+this_state_ideal
+this_state_current
+hsize <- 2
 
-plot2 <- ggplot(data = this_state_ideal, aes(x = "", y = idealNumSeats, fill = party)) + 
+plot1 <- ggplot(data = this_state_ideal, aes(x = hsize, y = partyvotes, fill = party)) + 
     geom_bar(stat = "identity", position = position_fill()) +
-    geom_text(aes(label = party), position = position_fill(vjust = 0.5)) +
-    coord_polar(theta = "y") +
-    facet_wrap(~ state_po, nrow = 1) 
-plot2
+    geom_text(aes(label = partyvotes), color = "white", size = 2, position = position_fill(vjust = 0.5)) +
+    coord_polar(theta = "y") + xlim(c(0.2, hsize + 0.5)) +
+    facet_wrap(~ state_po, nrow = 1) +
+  scale_fill_manual(values = c("#E9141D", "#0015BC", 'orange', 'green', 'purple'))
+plot1 + theme(axis.text.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank())
 
-plot3 <- ggplot(data = this_state_current, aes(x = "", y = numseats, fill = party)) + 
+plot2 <- ggplot(data = this_state_ideal, aes(x = hsize, y = idealNumSeats, fill = party)) + 
     geom_bar(stat = "identity", position = position_fill()) +
-    geom_text(aes(label = party), position = position_fill(vjust = 0.5)) +
-    coord_polar(theta = "y") +
-    facet_wrap(~ state_po, nrow = 1) 
-plot3
+    geom_text(aes(label = idealNumSeats),color = "white", position = position_fill(vjust = 0.5)) +
+    coord_polar(theta = "y") + xlim(c(0.2, hsize + 0.5)) +
+    facet_wrap(~ state_po, nrow = 1) +
+  scale_fill_manual(values = c("#E9141D", "#0015BC", 'orange', 'green', 'purple'))
+plot2 + theme(axis.text.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank())
+
+plot3 <- ggplot(data = this_state_current, aes(x = hsize, y = numseats, fill = party)) + 
+    geom_bar(stat = "identity", position = position_fill()) +
+    geom_text(aes(label = numseats),color = "white", position = position_fill(vjust = 0.5)) +
+    coord_polar(theta = "y") + xlim(c(0.2, hsize + 0.5)) +
+    facet_wrap(~ state_po, nrow = 1)  +
+  scale_fill_manual(values = c("#E9141D", "#0015BC", 'orange', 'green', 'purple'))
+plot3 + theme(axis.text.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank())
 ```
