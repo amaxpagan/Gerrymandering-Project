@@ -5,21 +5,25 @@ date: "7/25/2022"
 output: html_document
 ---
 
-Importing the dataset
+# Gerrymandering Project
+
+## Importing the dataset
 
 ```{r setup, include=TRUE}
 library(tidyverse)
 voting_data <- read.csv("~/Downloads/1976-2020-house.csv")
 ```
 
-Extracting the necessary the data. Which year do you want to look at?
+## Extracting the necessary the data. 
+
+Which year do you want to look at?
 
 ```{r cleanup, include=TRUE}
 year.input <- readline(prompt="Enter a year between 1976 and 2020: ")
 voting_data_clean <- voting_data  %>% filter(year == year.input) %>% select(state_po, district, candidate, party, candidatevotes) 
 ```
 
-How many districts are there per state?
+## How many districts are there per state?
 
 ```{r districts, include=TRUE}
 num_districts <- voting_data_clean %>%  group_by(state_po) %>% summarise(district_total = max(district)) %>% arrange(district_total)
@@ -46,7 +50,9 @@ We'll get rid of the parties that should win 0 seats
 finalframe2 <- finalframe %>% filter(idealNumSeats != 0) %>% replace(.=="", "NO PARTY LISTED")
 ```
 
-Now that I have the ideal proportional division of house seats per party in each state, let's take a look at the real numbers
+Now that I have the ideal proportional division of house seats per party in each state, let's take a look at the real numbers.
+
+## Real results
 
 ```{r proportional info, include=TRUE}
 clean_data_2 <- voting_data_clean %>% select(state_po, district, candidate, party, candidatevotes) %>% group_by(state_po, district) %>% mutate(winner=ifelse(candidatevotes==max(candidatevotes, na.rm=TRUE),T,F))
@@ -59,7 +65,7 @@ num_seats_state <- num_seats_district %>% select(state_po, party, numseats) %>% 
 
 Now I have two useful tables: one that gives us the number of seats each party currently has (num_seats_state), and one that gives us the number of seats each party "deserves" based on the number of votes it received (finalframe2).
 
-Creating useful graphs:
+## Creating useful graphs
 
 ```{r pt1, include=TRUE}
 state.input <- readline(prompt="Enter 2-Letter State Postal Code: ")
